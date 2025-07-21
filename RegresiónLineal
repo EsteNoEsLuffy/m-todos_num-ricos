@@ -1,0 +1,68 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+n= int(input("¿Cuántos datos tienes?: ")) #cantidad de datos a usuario por consola por medio de tuplas 
+
+#valores
+x= []
+y= []
+
+print("\nIngresa los valores de x:")
+for i in range(n):
+    valor= float(input(f"x[{i+1}]: "))
+    x.append(valor) #el append para agregar un dato más al la lista (valor + 1)
+
+print("\nIngresa los valores de y:")
+for i in range(n):
+    valor= float(input(f"y[{i+1}]: "))
+    y.append(valor)
+
+x= np.array(x)# convierte las tuplas en arreglos 
+y= np.array(y)
+
+x_prom= np.mean(x) #calcula los promedios (np)
+y_prom= np.mean(y)
+
+a= sum((x - x_prom) * (y - y_prom)) / sum((x - x_prom)**2) # Calcular pendiente 'a' y ordenada al origen 'b'
+b= y_prom - a * x_prom
+
+y_estimada = a * x + b # calcular valores estimados de y
+#y_estimada (yi)
+
+
+errores= y - y_estimada #calcular error estándar
+error_est= np.sqrt(sum(errores**2) / (n - 2))
+error_procentual=( error_est / np.mean(y))*100
+
+
+#              (xi - x-media)*(yi-y-media)
+numerador= sum((x - x_prom)*(y - y_prom)) #calcular coeficiente de correlación
+denominador= np.sqrt(sum((x - x_prom)**2) * sum((y - y_prom)**2))
+r= numerador / denominador
+"""
+r=1: correlación positiva 
+
+r= −1: correlación negativa 
+
+r=0: sin correlación lineal
+"""
+
+#mostrar  por consola
+print("\n--- Resultados ---")
+print(f"Pendiente (a): {a:.6f}")
+print(f"Intersección (b): {b:.6f}")
+print(f"Error estándar: {error_est:.6f}")
+print(f"Error estándar (%): {error_procentual:.2f}%")
+print(f"Coeficiente de correlación: {r:.6f}")
+
+
+#graficar datos y línea ajustada
+plt.scatter(x, y, color="blue", label="Datos")
+plt.plot(x, y_estimada, color="red", label="Recta ajustada")
+plt.title("Interpolación lineal por mínimos cuadrados")
+plt.xlabel("x")
+plt.ylabel("y")
+plt.grid(True)
+plt.legend()
+plt.show()
